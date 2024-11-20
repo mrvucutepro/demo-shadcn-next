@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
 import {
     flexRender,
     getCoreRowModel,
@@ -29,10 +30,10 @@ import {
 import { Plus, Search } from 'lucide-react';
 import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
-import { Checkbox } from '../ui/checkbox';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import { DialogComponent } from './custom-dialog';
 import { useDispatch } from 'react-redux';
+import { addUser } from '@/redux/userSlice';
 
 const columns = [
     {
@@ -103,7 +104,7 @@ type ColumnSort = {
 };
 type SortingState = ColumnSort[];
 
-export const TaskTable = ({ data, handleAddNewUser }) => {
+export const TaskTable = ({ data }) => {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -148,23 +149,22 @@ export const TaskTable = ({ data, handleAddNewUser }) => {
 
     const dispatch = useDispatch();
 
-    const handleAddNewUser = (newUser) => {
-        dispatch(addUser(newUser));
-    };
-
+    // const handleAddNewUser = (newUser) => {
+    //     dispatch(addUser(newUser));
+    // };
 
     return (
         <div>
-            <Button onClick={openDialog} className="mb-4">
+            {/* <Button onClick={openDialog} className="mb-4">
                 <Plus /> Add new User
             </Button>
             <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
                 <DialogComponent
                     isDialogOpen={isDialogOpen}
                     closeDialog={closeDialog}
-                    handleAddNewUser={handleAddNewUser}
+                    // handleAddNewUser={handleAddNewUser}
                 />
-            </Dialog>
+            </Dialog> */}
 
             <div className="relative flex items-center mb-4">
                 <Search className="absolute left-3 h-5 w-5 text-gray-500" />

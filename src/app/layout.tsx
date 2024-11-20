@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/custom-component/app-sidebar';
 import { ThemeProvider } from '@/components/custom-component/theme-provider';
 import { Provider } from 'react-redux';
 import store from '@/redux/store';
+import ClientComponents from '@/components/client-component';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -30,29 +31,30 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <Provider store={store}>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <div className="flex w-full">
-                    <div>
-                        <SidebarProvider>
-                            <AppSidebar />
-                        </SidebarProvider>
-                    </div>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        <div className="m-8 flex-1">
-                            <div className="w-full">{children}</div>
+                <Provider store={store}>
+                    <ClientComponents />
+                    {/* <div className="flex w-full">
+                        <div>
+                            <SidebarProvider>
+                                <AppSidebar />
+                            </SidebarProvider>
                         </div>
-                    </ThemeProvider>
-                </div>
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="system"
+                            enableSystem
+                            disableTransitionOnChange
+                        >
+                        </ThemeProvider>
+                    </div> */}
+                    <div className="m-8 flex-1">
+                        <div className="w-full">{children}</div>
+                    </div>
+                </Provider>
             </body>
-            </Provider>
         </html>
     );
 }

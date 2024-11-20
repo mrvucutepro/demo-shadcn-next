@@ -12,10 +12,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 
-export function DialogComponent({isDialogOpen,closeDialog,handleAddNewUser}) {
+export function DialogComponent({isDialogOpen,closeDialog,
+    handleAddNewUser
+}) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [avatar, setAvatar] = useState('');
+    const [avatar, setAvatar] = useState(null);
     const [address, setAddress] = useState('');
 
     const handleSubmit = () => {
@@ -23,18 +25,26 @@ export function DialogComponent({isDialogOpen,closeDialog,handleAddNewUser}) {
             name,
             email,
             address,
+            avatar,
         };
         handleAddNewUser(newUser);
         closeDialog();
+    };
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0]; 
+        if (file) {
+            setAvatar(file);
+        }
     };
 
     return (
         <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
             <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                    <DialogTitle>Add new profile</DialogTitle>
+                    <DialogTitle>Add New User</DialogTitle>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
+                {/* <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="name" className="text-left">
                             Name
@@ -55,8 +65,7 @@ export function DialogComponent({isDialogOpen,closeDialog,handleAddNewUser}) {
                             id="avatar"
                             className="col-span-3"
                             type="file"
-                            onChange={(e) => setAvatar(e.target.value)}
-                            value={avatar}
+                            onChange={handleAvatarChange}
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
@@ -81,7 +90,7 @@ export function DialogComponent({isDialogOpen,closeDialog,handleAddNewUser}) {
                             value={address}
                         />
                     </div>
-                </div>
+                </div> */}
                 <DialogFooter>
                     <Button
                         type="submit"
