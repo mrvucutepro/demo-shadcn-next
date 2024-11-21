@@ -34,26 +34,26 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <Provider store={store}>
-                    <ClientComponents />
-                    {/* <div className="flex w-full">
-                        <div>
-                            <SidebarProvider>
-                                <AppSidebar />
-                            </SidebarProvider>
-                        </div>
-                        <ThemeProvider
+                {/* <Provider store={store}> */}
+                {/* <ClientComponents /> */}
+                <div className="flex w-full">
+                    <div>
+                        <SidebarProvider>
+                            <AppSidebar />
+                        </SidebarProvider>
+                    </div>
+                    <ThemeProvider
                             attribute="class"
                             defaultTheme="system"
                             enableSystem
                             disableTransitionOnChange
                         >
                         </ThemeProvider>
-                    </div> */}
                     <div className="m-8 flex-1">
                         <div className="w-full">{children}</div>
                     </div>
-                </Provider>
+                </div>
+                {/* </Provider> */}
             </body>
         </html>
     );

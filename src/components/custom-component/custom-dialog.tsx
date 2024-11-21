@@ -7,97 +7,111 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 
-export function DialogComponent({isDialogOpen,closeDialog,
-    handleAddNewUser
+export function DialogComponent({
+    onSave,
+}: {
+    onSave: (newUser: {
+        name: string;
+        email: string;
+        avatar: string;
+        address: string;
+    }) => void;
 }) {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [avatar, setAvatar] = useState(null);
-    const [address, setAddress] = useState('');
+    const [user, setUser] = useState({
+        name: '',
+        email: '',
+        address: '',
+        avatar: '',
+    });
 
-    const handleSubmit = () => {
-        const newUser = {
-            name,
-            email,
-            address,
-            avatar,
-        };
-        handleAddNewUser(newUser);
-        closeDialog();
-    };
-
-    const handleAvatarChange = (e) => {
-        const file = e.target.files[0]; 
-        if (file) {
-            setAvatar(file);
+    const handleSave = () => {
+        if (user.name || user.email || user.avatar || user.address) {
+            console.log('handlesave', user);
+            onSave(user);
         }
     };
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setUser((prevUser) => ({
+            ...prevUser,
+            [id]: value,
+        }));
+    };
+
+
     return (
-        <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
-            <DialogContent className="sm:max-w-[500px]">
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="outline">Add New</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add New User</DialogTitle>
+                    <DialogTitle>Add New</DialogTitle>
                 </DialogHeader>
-                {/* <div className="grid gap-4 py-4">
+                <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-left">
+                        <Label htmlFor="name" className="text-right">
                             Name
                         </Label>
                         <Input
                             id="name"
+                            value={user.name}
+                            onChange={handleChange}
                             className="col-span-3"
-                            onChange={(e) => setName(e.target.value)}
-                            value={name}
                         />
                     </div>
-
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="avatar" className="text-left">
+                        <Label htmlFor="avatar" className="text-right">
                             Avatar
                         </Label>
                         <Input
                             id="avatar"
-                            className="col-span-3"
                             type="file"
-                            onChange={handleAvatarChange}
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                    setUser((prevUser) => ({
+                                        ...prevUser,
+                                        avatar: file.name,
+                                    }));
+                                }
+                            }}
+                            className="col-span-3"
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-left">
+                        <Label htmlFor="email" className="text-right">
                             Email
                         </Label>
                         <Input
                             id="email"
+                            value={user.email}
+                            onChange={handleChange}
                             className="col-span-3"
-                            onChange={(e) => setEmail(e.target.value)}
-                            value={email}
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="address" className="text-left">
+                        <Label htmlFor="address" className="text-right">
                             Address
                         </Label>
                         <Input
                             id="address"
+                            value={user.address}
+                            onChange={handleChange}
                             className="col-span-3"
-                            onChange={(e) => setAddress(e.target.value)}
-                            value={address}
                         />
                     </div>
-                </div> */}
+                </div>
                 <DialogFooter>
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        onClick={handleSubmit}
-                    >
-                        Add New
+                    <Button className='w_full' type="button" onClick={handleSave}>
+                        Submit
                     </Button>
                 </DialogFooter>
             </DialogContent>
