@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/custom-component/theme-provider';
 import { Provider } from 'react-redux';
 import store from '@/redux/store';
 import ClientComponents from '@/components/client-component';
+import { ModeToggle } from '@/components/custom-component/mode-toggle';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -36,24 +37,27 @@ export default function RootLayout({
             >
                 {/* <Provider store={store}> */}
                 {/* <ClientComponents /> */}
-                <div className="flex w-full">
-                    <div>
-                        <SidebarProvider>
-                            <AppSidebar />
-                        </SidebarProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <div className="flex w-full">
+                        <div>
+                            <SidebarProvider>
+                                <AppSidebar />
+                            </SidebarProvider>
+                        </div>
+
+                        <div className="m-8 flex-1">
+                            <div className="flex justify-end">
+                                <ModeToggle />
+                            </div>
+                            <div className="w-full">{children}</div>
+                        </div>
                     </div>
-                    <ThemeProvider
-                            attribute="class"
-                            defaultTheme="system"
-                            enableSystem
-                            disableTransitionOnChange
-                        >
-                        </ThemeProvider>
-                    <div className="m-8 flex-1">
-                        <div className="w-full">{children}</div>
-                    </div>
-                </div>
-                {/* </Provider> */}
+                </ThemeProvider>
             </body>
         </html>
     );

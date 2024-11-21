@@ -11,40 +11,64 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function DialogComponent({
     onSave,
+    user = null,
+    isEdit = false,
 }: {
-    onSave: (newUser: {
+    onSave: (user: {
+        id?: number;
         name: string;
         email: string;
         avatar: string;
         address: string;
+        status?: string;
     }) => void;
+    user?: {
+        id: number;
+        name: string;
+        email: string;
+        avatar: string;
+        address: string;
+        status: string;
+    } | null;
+    isEdit?: boolean;
 }) {
-    const [user, setUser] = useState({
+    const [formData, setFormData] = useState({
         name: '',
         email: '',
         address: '',
         avatar: '',
+        status: 'Active',
     });
 
+    useEffect(() => {
+        if (user) {
+            setFormData(user);
+        }
+    }, [user]);
+
     const handleSave = () => {
-        if (user.name || user.email || user.avatar || user.address) {
-            console.log('handlesave', user);
-            onSave(user);
+        if (
+            formData.name ||
+            formData.email ||
+            formData.avatar ||
+            formData.address
+        ) {
+            console.log('handlesave', formData);
+            onSave(formData);
         }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
-        setUser((prevUser) => ({
+        setFormData((prevUser) => ({
             ...prevUser,
             [id]: value,
         }));
     };
-
 
     return (
         <Dialog>
@@ -53,7 +77,9 @@ export function DialogComponent({
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add New</DialogTitle>
+                    <DialogTitle>
+                        {isEdit ? 'Edit User' : 'Add New'}
+                    </DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
@@ -62,7 +88,7 @@ export function DialogComponent({
                         </Label>
                         <Input
                             id="name"
-                            value={user.name}
+                            value={formData.name}
                             onChange={handleChange}
                             className="col-span-3"
                         />
@@ -77,7 +103,7 @@ export function DialogComponent({
                             onChange={(e) => {
                                 const file = e.target.files?.[0];
                                 if (file) {
-                                    setUser((prevUser) => ({
+                                    setFormData((prevUser) => ({
                                         ...prevUser,
                                         avatar: file.name,
                                     }));
@@ -92,7 +118,7 @@ export function DialogComponent({
                         </Label>
                         <Input
                             id="email"
-                            value={user.email}
+                            value={formData.email}
                             onChange={handleChange}
                             className="col-span-3"
                         />
@@ -103,14 +129,31 @@ export function DialogComponent({
                         </Label>
                         <Input
                             id="address"
-                            value={user.address}
+                            value={formData.address}
                             onChange={handleChange}
                             className="col-span-3"
                         />
                     </div>
+                    {isEdit && (
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="status" className="text-right">
+                                Status
+                            </Label>
+                            <Input
+                                id="status"
+                                value={formData.status}
+                                onChange={handleChange}
+                                className="col-span-3"
+                            />
+                        </div>
+                    )}
                 </div>
                 <DialogFooter>
-                    <Button className='w_full' type="button" onClick={handleSave}>
+                    <Button
+                        className="w_full"
+                        type="button"
+                        onClick={handleSave}
+                    >
                         Submit
                     </Button>
                 </DialogFooter>

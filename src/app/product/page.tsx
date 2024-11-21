@@ -22,9 +22,9 @@ interface User {
 const UserPage = () => {
     const [data, setData] = useState<User[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    // const [editingUser, setEditingUser] = useState<User | null>(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,7 +42,34 @@ const UserPage = () => {
         fetchData();
     }, []);
 
- 
+    const openDialog = () => {
+        setIsDialogOpen(true);
+    };
+
+    const closeDialog = () => {
+        setIsDialogOpen(false);
+    };
+
+    const openConfirmDialog  = () => {
+        setIsConfirmDialogOpen(false);
+    };
+
+
+    const handleAddUser = (newUser: {
+        name: string;
+        email: string;
+        avatar: string;
+        address: string;
+    }) => {
+        const lastUserId = data[data.length - 1].id;
+        const newUserWithId = {
+            ...newUser,
+            id: lastUserId + 1,
+        };
+        setData((prevData) => [...prevData, newUserWithId]);
+        setIsDialogOpen(false);
+        alert('Add New User Successfully');
+    };
 
     const columns = [
         {
@@ -121,7 +148,7 @@ const UserPage = () => {
                 const userSeleted = row.original;
                 return (
                     <DropdownMenuButton
-                        onDelete={() => openConfirmDialog(userSeleted.id)}
+                        onDelete={() => onDeleteUser(userSeleted.id)}
                         onEdit={() => onEditUser(userSeleted.id)}
                     />
                 );
@@ -129,55 +156,15 @@ const UserPage = () => {
         },
     ];
 
-    const openDialog = () => {
-        setIsDialogOpen(true);
-    };
+    const handleDeleteUser = (userId: number) => {
 
-    const closeDialog = () => {
-        setIsDialogOpen(false);
-    };
-
-    const openConfirmDialog = (userId: number) => {
-        setSelectedUserId(userId);
-        setIsConfirmDialogOpen(true);
-    };
-
-    const closeConfirmDialog = () => {
-        setIsConfirmDialogOpen(false);
-    };
-
-
-    const handleAddUser = (newUser: {
-        name: string;
-        email: string;
-        avatar: string;
-        address: string;
-    }) => {
-        const lastUserId = data[data.length - 1].id;
-        const newUserWithId = {
-            ...newUser,
-            id: lastUserId + 1,
-        };
-        setData((prevData) => [...prevData, newUserWithId]);
-        setIsDialogOpen(false);
-        alert('Add New User Successfully');
-    };
-
-
-    console.log(selectedUserId);
-    
-    const handleDeleteUser = () => {
-        if (selectedUserId !== null) {
-            setData((prevData) => prevData.filter((user) => user.id !== selectedUserId));
-            setIsConfirmDialogOpen(false);  
-            setSelectedUserId(null);
-        }
+        setData((prevData) => prevData.filter((user) => user.id !== userId));
     };
 
     return (
         <div>
             {!isDialogOpen && <DialogComponent onSave={handleAddUser} />}
-            {isConfirmDialogOpen && <ConfirmDialog isOpen={isConfirmDialogOpen} onCancel={closeConfirmDialog} onConfirm={handleDeleteUser}/>}
+            {isDialogOpen && <ConfirmDialog isOpen={isConfirmDialogOpen} />}
             <PaginationProvider data={data}>
                 <TaskTable
                     data={data}

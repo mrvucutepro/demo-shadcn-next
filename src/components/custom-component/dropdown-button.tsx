@@ -16,11 +16,11 @@ import {
 import { CircleX, Ellipsis, Settings } from 'lucide-react';
 
 export function DropdownMenuButton({
-    // onEdit,
-    // onDelete,
+    onEdit,
+    onDelete,
 }: {
-    // onEdit: () => void;
-    // onDelete: () => void;
+    onEdit: () => void;
+    onDelete: () => void;
 }) {
     return (
         <DropdownMenu>
@@ -32,15 +32,11 @@ export function DropdownMenuButton({
             <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>Action</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                // onClick={onEdit}
-                >
+                <DropdownMenuItem onClick={onEdit}>
                     <Settings />
                     Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                // onClick={onDelete}
-                >
+                <DropdownMenuItem onClick={onDelete}>
                     <CircleX />
                     Delete
                 </DropdownMenuItem>

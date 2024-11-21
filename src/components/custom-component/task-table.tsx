@@ -39,94 +39,12 @@ import { DropdownMenuButton } from './dropdown-button';
 import { TaskTablePagination } from './task-table-pagination';
 import { SearchComponent } from './search-component';
 import { usePagination } from '@/ContextApi/paginationContext';
+import Image from 'next/image';
+import { DataTablePagination } from './data-table-pagination';
 
-export const TaskTable = ({ data }) => {
+export const TaskTable = ({ data, columns ,onDeleteUser}) => {
     const { pagination, setPagination, paginatedData } = usePagination();
     const [filtering, setFiltering] = useState('');
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-
-    const columns = [
-        {
-            id: 'select',
-            header: () => <input type="checkbox" />,
-            enableSorting: true,
-            cell: ({ row }) => (
-                <input
-                    type="checkbox"
-                    checked={row.getIsSelected()}
-                    onChange={() => row.toggleSelected()}
-                />
-            ),
-        },
-        {
-            accessorKey: 'id',
-            header: () => 'ID',
-            footer: (props) => props.column.getHeader(),
-        },
-        {
-            accessorKey: 'name',
-            header: () => 'Name',
-            footer: (props) => props.column.id,
-            enableSorting: true,
-        },
-        {
-            accessorKey: 'avatar',
-            header: () => 'Avatar',
-            footer: (props) => props.column.id,
-            cell: (info) => {
-                return (
-                    <span className="avatar-column">
-                        <img
-                            src={info.value}
-                            alt="Avatar"
-                            className="h-8 w-8 rounded-full"
-                        />
-                    </span>
-                );
-            },
-        },
-        {
-            accessorKey: 'email',
-            header: () => 'Email',
-            footer: (props) => props.column.id,
-            enableSorting: true,
-        },
-        {
-            accessorKey: 'address',
-            header: () => 'Address',
-            footer: (props) => props.column.id,
-        },
-        {
-            accessorKey: 'status',
-            header: () => 'Status',
-            footer: (props) => props.column.id,
-            cell: (info) => {
-                return (
-                    <span
-                        className={`${
-                            info.getValue() === 'Active'
-                                ? ' bg-green-500 text-gray-200 p-4 rounded-full'
-                                : ' bg-red-500 text-black p-4 rounded-full'
-                        }`}
-                    >
-                        {info.getValue()}
-                    </span>
-                );
-            },
-        },
-        {
-            id: 'action',
-            header: () => 'Action',
-            footer: (props) => props.column.id,
-            cell: () => {
-                return (
-                    <DropdownMenuButton
-                    // onDelete={() => onDeleteUser(user.id)}
-                    />
-                );
-            },
-        },
-    ];
 
     const table = useReactTable({
         data: paginatedData,
@@ -146,6 +64,7 @@ export const TaskTable = ({ data }) => {
         pageCount: Math.ceil(data.length / pagination.pageSize),
     });
 
+    
     return (
         <div>
             <SearchComponent
@@ -172,10 +91,10 @@ export const TaskTable = ({ data }) => {
                                                 {
                                                     {
                                                         asc: (
-                                                            <i data-lucide="chevron-up" />
+                                                            '🔼'
                                                         ),
                                                         desc: (
-                                                            <i data-lucide="chevron-down" />
+                                                            '🔽'
                                                         ),
                                                     }[
                                                         header.column.getIsSorted() ??
@@ -190,7 +109,7 @@ export const TaskTable = ({ data }) => {
                         ))}
                     </TableHeader>
                 </Table>
-                <ScrollArea className="h-[600px] rounded-md border overflow-auto">
+                <ScrollArea className="h-[650px] rounded-md border overflow-auto">
                     <Table className="w-full table-fixed border-collapse">
                         <TableBody>
                             {table.getRowModel().rows.map((row) => (
@@ -209,7 +128,7 @@ export const TaskTable = ({ data }) => {
                     </Table>
                 </ScrollArea>
             </div>
-            <TaskTablePagination table={table} />
+            <DataTablePagination table={table}/>
         </div>
     );
 };
