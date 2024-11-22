@@ -109,7 +109,7 @@ export const TaskTable = ({ data, columns ,onDeleteUser}) => {
                         ))}
                     </TableHeader>
                 </Table>
-                <ScrollArea className="h-[650px] rounded-md border overflow-auto">
+                <ScrollArea className="h-[400px] rounded-md border overflow-auto">
                     <Table className="w-full table-fixed border-collapse">
                         <TableBody>
                             {table.getRowModel().rows.map((row) => (

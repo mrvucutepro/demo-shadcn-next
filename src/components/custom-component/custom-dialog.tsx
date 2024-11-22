@@ -14,10 +14,14 @@ import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
 
 export function DialogComponent({
+    open,
+    onClose,
     onSave,
     user = null,
     isEdit = false,
 }: {
+    open: boolean;
+    onClose: () => void;
     onSave: (user: {
         id?: number;
         name: string;
@@ -57,8 +61,8 @@ export function DialogComponent({
             formData.avatar ||
             formData.address
         ) {
-            console.log('handlesave', formData);
             onSave(formData);
+            onClose();
         }
     };
 
@@ -71,9 +75,9 @@ export function DialogComponent({
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={onClose}>
             <DialogTrigger asChild>
-                <Button variant="outline">Add New</Button>
+                <Button variant="outline">{isEdit ? 'Edit User' : 'Add New'}</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

@@ -22,9 +22,10 @@ interface User {
 const UserPage = () => {
     const [data, setData] = useState<User[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    // const [editingUser, setEditingUser] = useState<User | null>(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);    
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -122,7 +123,7 @@ const UserPage = () => {
                 return (
                     <DropdownMenuButton
                         onDelete={() => openConfirmDialog(userSeleted.id)}
-                        onEdit={() => onEditUser(userSeleted.id)}
+                        onEdit={() => openEditDialog(userSeleted.id)}
                     />
                 );
             },
@@ -137,10 +138,28 @@ const UserPage = () => {
         setIsDialogOpen(false);
     };
 
+    const openEditDialog = (userId: number) => {
+        setSelectedUserId(userId); 
+        setIsEditDialogOpen(true); 
+    };
+
+    const closeEditDialog = () => {
+        setIsEditDialogOpen(false); 
+        setSelectedUserId(null); 
+    };
+
     const openConfirmDialog = (userId: number) => {
         setSelectedUserId(userId);
         setIsConfirmDialogOpen(true);
     };
+
+    // const onEditUser = (userId: number) => {
+    //     const userToEdit = data.find((user) => user.id === userId); 
+    //     if (userToEdit) {
+    //         setEditingUser(userToEdit); 
+    //         setIsDialogOpen(true); 
+    //     }
+    // };
 
     const closeConfirmDialog = () => {
         setIsConfirmDialogOpen(false);
@@ -159,13 +178,11 @@ const UserPage = () => {
             id: lastUserId + 1,
         };
         setData((prevData) => [...prevData, newUserWithId]);
-        setIsDialogOpen(false);
+        closeDialog();
         alert('Add New User Successfully');
     };
-
-
-    console.log(selectedUserId);
     
+
     const handleDeleteUser = () => {
         if (selectedUserId !== null) {
             setData((prevData) => prevData.filter((user) => user.id !== selectedUserId));
@@ -176,8 +193,19 @@ const UserPage = () => {
 
     return (
         <div>
-            {!isDialogOpen && <DialogComponent onSave={handleAddUser} />}
-            {isConfirmDialogOpen && <ConfirmDialog isOpen={isConfirmDialogOpen} onCancel={closeConfirmDialog} onConfirm={handleDeleteUser}/>}
+            {/* {!isDialogOpen && <DialogComponent onSave={handleAddUser} onEdit={onEditUser} user={editingUser} isEdit={!!editingUser} />} */}
+            <DialogComponent
+                onSave={handleAddUser}
+            />
+            {isEditDialogOpen && 
+                <DialogComponent
+                    onSave={handleAddUser}
+                    isEdit={true}
+                    user={selectedUserId}
+                    open={isEditDialogOpen}
+                    onClose={closeEditDialog}
+                />
+            }
             <PaginationProvider data={data}>
                 <TaskTable
                     data={data}

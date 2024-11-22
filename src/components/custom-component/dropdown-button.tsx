@@ -3,6 +3,8 @@
 
 import * as React from 'react';
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
+import { Row } from "@tanstack/react-table";
+
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,14 +16,20 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { CircleX, Ellipsis, Settings } from 'lucide-react';
+import { IUser } from '@/app/page';
 
-export function DropdownMenuButton({
-    onEdit,
-    onDelete,
-}: {
-    onEdit: () => void;
-    onDelete: () => void;
-}) {
+interface DataTableRowActionsProps<TData> {
+    row: Row<TData>;
+    onSelected: (userSelected: IUser) => void;
+  }
+export function DropdownMenuButton<TData>({
+    row,
+    onSelected,
+}:DataTableRowActionsProps<TData> & {userSelected: TData}){
+    const user = row.original;
+    const handleSelect = (user) => {
+        onSelected(user); 
+    };
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -32,11 +40,11 @@ export function DropdownMenuButton({
             <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>Action</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={onEdit}>
+                <DropdownMenuItem onClick={()=> handleSelect(user)}>
                     <Settings />
                     Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onDelete}>
+                <DropdownMenuItem onClick={()=> handleSelect(user)}>
                     <CircleX />
                     Delete
                 </DropdownMenuItem>
